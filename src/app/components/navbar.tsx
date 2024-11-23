@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-import {
+import Icon, {
   DesktopOutlined,
   FileOutlined,
   HomeOutlined,
@@ -15,13 +15,19 @@ import {
   ShoppingOutlined,
   SearchOutlined,
   BorderOutlined,
-  GatewayOutlined
+  GatewayOutlined,
+  PictureOutlined,
+  MailOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+  DownOutlined,
+  SyncOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, Button, Input } from 'antd';
 
 import { Col, Row } from 'antd';
-import SubMenu from 'antd/es/menu/SubMenu';
+
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -31,100 +37,211 @@ type MenuItem = Required<MenuProps>['items'][number];
 function Navbar({children}:{ children: React.ReactNode}){
     const router = useRouter();
     const pathname = usePathname(); // Add this hook
-
-        
-    function getItem(
-        label: React.ReactNode,
-        key: React.Key,
-        icon?: React.ReactNode,
-        children?: MenuItem[],
-    ): MenuItem {
-        return {
-            key,
-            icon,
-            children,
-            label,
-            onClick: () => router.push(key.toString())
-        } as MenuItem;
-    }
-        
-    const items: MenuItem[] = [
-        getItem('Dashboard', '/products', <HomeOutlined/>),
-        {
-            key: 'pos_section',
-            label: 'POS SECTION',
-            type: 'group', style: { fontWeight: '700',fontSize: '14px' },
-            children: [
-                { key: '13', label: 'New Sale', icon: <ShoppingOutlined />, style: { fontWeight: 'normal',fontSize: '14px' }},
-            ],
-        },
-        {
-            key: 'order_management',
-            label: 'ORDER MANAGEMENT',
-            type: 'group',
-            style: {
-                fontWeight:'700',
-                color:'#B4B4B4'
-            },
-            children: [
-                { 
-                    key: 'orders',
-                    label: 'Orders', 
-                    icon: <ShoppingOutlined />, 
-                    style: { fontWeight: 'normal' }, 
-                    children: ['All', 'Scheduled', 'Pending','Accepted', 'Processing', 'Order On The Way', 'Delivered', 'Canceled', 'Payment Failed', 'Refunded', 'Offline Payment'].map((item,i) => { return { key: item.toLocaleLowerCase(), label: '- ' + item} })
-                },
-                {
-                    key: '14',
-                    label: 'Order Refunds',
-                    icon:  <BorderOutlined />,
-                    style: { fontWeight: 'normal' }, 
-                    children: [
-                        {
-                            key: 'refund_request',
-                            label:'- Refund Request'
-                        }
-                    ]
-                }
-            ],
-        },
-        {
-            key: 'promotion_management',
-            label: 'PROMOTION MANAGEMENT',
-            type: 'group',
-            style: {
-                fontWeight:'700',
-                color:'#B4B4B4'
-            },
-            children: [
-                { 
-                    key: '13',
-                    label: 'Campaigns', 
-                    icon: <GatewayOutlined />, 
-                    style: { fontWeight: 'normal' }, 
-
-                }
-            ]
-        },
-       
-        getItem('Option 2', '2', <DesktopOutlined />),
-        getItem('User', 'sub1', <UserOutlined />, [
-        getItem('Tom', '3'),
-        getItem('Bill', '4'),
-        getItem('Alex', '5'),
-        ]),
-        getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-        getItem('Files', '9', <FileOutlined />),
-    ];
   
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
+    const menuItemGroupClass = `text-[11px] text-[#B4B4B4] font-bold break-all`;
+
+    const menuNavbar: MenuItem[] = [
+        {
+          label: 'Dashboard',
+          icon: <HomeOutlined />,
+          key: 'dashboard'
+        },
+        {
+          type: 'group',
+          label: <div className={menuItemGroupClass}>POS SECTION</div>,
+          children: [
+            {
+              label: 'New Sale',
+              icon: <ShoppingOutlined />,
+              key: 'newsale'
+            }
+          ]
+        },
+        {
+          type: 'group',
+          label: <div className={menuItemGroupClass}>ORDER MANAGEMENT</div>,
+          children: [
+            {
+              label: 'Orders',
+              icon: <ShoppingOutlined />,
+              key: 'orders',
+              children: [
+                'All', 'Scheduled', 'Pending', 'Accepted', 'Processing', 
+                'Order On The Way', 'Delivered', 'Canceled', 'Payment Failed', 
+                'Refunded', 'Offline Payment'
+              ].map(item => ({
+                label: `- ${item}`,
+                key: item.toLowerCase()
+              }))
+            },
+            {
+              label: <p style={{fontSize:'12px'}}>Orders Refunds</p>,
+              icon: <ShoppingOutlined />,
+              key: 'orders-refunds',
+              children: [{
+                label: '- Refund Request',
+                key: 'refund_request'
+              }]
+            }
+          ]
+        },
+        {
+          type: 'group',
+          label: <div className={menuItemGroupClass}>PROMOTION MANAGEMENT</div>,
+          children: [
+            {
+              label: 'Campaigns',
+              icon: <GatewayOutlined />,
+              key: 'campaigns',
+              children: [
+                {
+                  label: '- Basic Campaigns',
+                  key: 'basic_campaigns'
+                },
+                {
+                  label: '- Item Campaigns',
+                  key: 'item_campaigns'
+                }
+              ]
+            },
+            {
+              label: 'Banners',
+              icon: <PictureOutlined />,
+              key: 'banners'
+            },
+            {
+              label: 'Other Banners',
+              icon: <PictureOutlined />,
+              key: 'other_banners'
+            },
+            {
+              label: 'Coupons',
+              icon: <PictureOutlined />,
+              key: 'coupons'
+            },
+            {
+              label: 'Cashback',
+              icon: <PictureOutlined />,
+              key: 'cashback'
+            },
+            {
+              label: 'Push Notification',
+              icon: <PictureOutlined />,
+              key: 'push_notification'
+            }
+          ]
+        },
+        {
+          type: 'group',
+          label: <div className={menuItemGroupClass}>PRODUCT MANAGEMENT</div>,
+          children: [
+            {
+                label: 'Categories',
+                icon: <ShoppingOutlined />,
+                key: 'categories',
+                children: [
+                    'Category', 'Sub Category', 'Bulk Import', 'Bulk Export'
+                  ].map(item => ({
+                    label: `- ${item}`,
+                    key: item.toLowerCase()
+                  }))
+            },
+            {
+                label: 'Attributes',
+                icon: <ShoppingOutlined />,
+                key: 'attributes',
+            },
+            {
+                label: 'Unit',
+                icon: <ShoppingOutlined />,
+                key: 'unit',
+            },
+            {
+                label: 'Common Conditions',
+                icon: <ShoppingOutlined />,
+                key: 'common_conditions',
+            },
+            {
+                label: 'Product Setup',
+                icon: <ShoppingOutlined />,
+                key: 'product_setup',
+                children: [
+                    'Add New', 'List', 'Product Gallery', 'Review'
+                  ].map(item => ({
+                    label: `- ${item}`,
+                    key: item.toLowerCase()
+                  }))
+            }
+          ]
+        }
+      ];
+
+
+        const menuHeader: MenuItem[] = [
+            {
+            label: 'Dashboard',
+            key: 'dashboard',
+            icon: <HomeOutlined style={{color:'#3C6CE7'}}/>,
+            },
+            {
+            label: 'Users',
+            key: 'users',
+            icon: <UserOutlined style={{color:'#3C6CE7'}}/>,
+            
+            },
+            {
+                label: 'Transactions & Reports',
+                key: 'transactions_reports',
+                icon: <FileOutlined style={{color:'#3C6CE7'}}/>,
+               
+            },
+            {
+            label: 'Settings',
+            key: 'setting',
+            type:'submenu',
+            expandIcon:<DownOutlined style={{color:'#3C6CE7'}}/>,
+            icon: <SettingOutlined style={{color:'#3C6CE7'}}/>,
+            
+            children: [
+                {
+                type: 'group',
+                label: 'Item 1',
+                children: [
+                    { label: 'Option 1', key: 'setting:1' },
+                    { label: 'Option 2', key: 'setting:2' },
+                ],
+                },
+                {
+                type: 'group',
+                label: 'Item 2',
+                children: [
+                    { label: 'Option 3', key: 'setting:3' },
+                    { label: 'Option 4', key: 'setting:4' },
+                ],
+                },
+            ],
+            },
+            {
+            key: 'alipay',
+            label: 'Dispatch Management',
+            icon:<SyncOutlined style={{color:'#3C6CE7'}} />,
+           
+            },
+        ];
+
+      const onClick: MenuProps['onClick'] = (e) => {
+        console.log('click ', e);
+        router.push(e.key.toString())
+      };
+
     return (
         <Layout style={{ minHeight: '100vh' }}>
-        <Sider theme='light' collapsed={collapsed} trigger={null}   className="p-0">
+        <Sider theme='light' collapsed={collapsed} trigger={null} width={350} className="p-0">
             <Row className="p-2">
             {!collapsed && <Col span={12}> <img src="/logo_sidebar.png" alt="Logo Sidebar"/></Col> }
             <Col span={!collapsed ? 12 : 24} className="flex justify-end items-center">
@@ -148,51 +265,35 @@ function Navbar({children}:{ children: React.ReactNode}){
             </Row>
                 
             <div className="demo-logo-vertical" />
-            <Menu mode="inline" defaultSelectedKeys={[pathname]}  theme="light" style={{border:0}}>
-                <Menu.Item icon={<HomeOutlined/>}>Dashboard</Menu.Item>
-                <Menu.ItemGroup style={{padding:0}} title={<div className="text-[11px] text-[#B4B4B4] font-bold break-all">POS SECTION</div>}>
-                    <Menu.Item key="newsale" icon={ <ShoppingOutlined />}>New Sale</Menu.Item>
-
-                </Menu.ItemGroup>
-                <Menu.ItemGroup style={{padding:0}} title={<div className="text-[11px] text-[#B4B4B4] font-bold break-all">ORDER MANAGEMENT</div>}>
-                    <SubMenu title="Orders" icon={<ShoppingOutlined/>}>
-                    {['All', 'Scheduled', 'Pending', 'Accepted', 'Processing', 'Order On The Way', 'Delivered', 'Canceled', 'Payment Failed', 'Refunded', 'Offline Payment'].map((item, i) => (
-                        <Menu.Item key={item.toLowerCase()}>
-                            - {item}
-                        </Menu.Item>
-                    ))}
-                    </SubMenu>
-                    <SubMenu title={<p style={{fontSize:'12px'}}>Orders Refunds</p>} icon={<ShoppingOutlined/>}>
-                        <Menu.Item key="refund_request">
-                            - Refund Request
-                        </Menu.Item>
-                    </SubMenu>
-
-                </Menu.ItemGroup>
-
-                <Menu.ItemGroup style={{padding:0}} title={<div className="text-[11px] text-[#B4B4B4] font-bold break-all">PROMOTION MANAGEMENT</div>}>
-                    <SubMenu title="Campaigns" icon={<GatewayOutlined/>}>
-                        <Menu.Item key="refund_request">
-                            - Basic Campaigns
-                        </Menu.Item>
-                        <Menu.Item key="refund_request">
-                            - Item Campaigns
-                        </Menu.Item>
-                    </SubMenu>
-                </Menu.ItemGroup>
-
-               
-            </Menu>
+            <Menu mode="inline" defaultSelectedKeys={[pathname]} style={{border:0}} className="pr-3" theme="light" items={menuNavbar}/>
             {/* <Menu theme="light" defaultSelectedKeys={[pathname]} mode="inline" items={items} /> */}
         </Sider>
-        <Layout className="!bg-white">
-            <Header style={{ padding: 0, background: colorBgContainer }}>
-                Header Top
+        <Layout className="!bg-white p-3">
+            <Header className="flex flex-wrap w-full flex-row h-fit rounded-lg shadow p-0" style={{ background: colorBgContainer }}>
+                <Menu onClick={onClick} defaultSelectedKeys={[pathname]} mode="horizontal" style={{border: 0, flexWrap: 'wrap', gap:'10px'}} items={menuHeader} />
+                <div className="grow flex flex-row flex-wrap justify-evenly items-center">
+                    <div className="w-25 h-25 bg-[#E0E6ED] p-2 rounded-3xl">
+                        <img src="/moon.svg"/>
+                    </div>
+                    <div className="w-25 h-25 bg-[#E0E6ED] p-2 rounded-3xl">
+                        <img src="/us_flag.svg"/>
+                    </div>
+                    <div className="w-25 h-25 bg-[#E0E6ED] p-2 rounded-3xl">
+                        <img src="/inbox.svg"/>
+                    </div>
+                    <div className="w-25 h-25 bg-[#E0E6ED] p-2 rounded-3xl">
+                        <img src="/bell.svg"/>
+                    </div>
+                    <div className="w-25 h-25 bg-[#E0E6ED] rounded-3xl">
+                        <img src="/user-profile.svg"/>
+                    </div>
+                </div>
             </Header>
-            <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+            <Content style={{ margin: '1rem 0' }}>
+            {/* <Breadcrumb style={{ margin: '16px 0' }}>
                 
-            </Breadcrumb>
+            </Breadcrumb> */}
+            
             {children}
             </Content>
             <Footer className="!bg-white" style={{ textAlign: 'center' }}>
