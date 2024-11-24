@@ -31,7 +31,7 @@ import { Col, Row } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+export type MenuItem = Required<MenuProps>['items'][number];
 
 
 function Navbar({children}:{ children: React.ReactNode}){
@@ -112,7 +112,7 @@ function Navbar({children}:{ children: React.ReactNode}){
             {
               label: 'Banners',
               icon: <PictureOutlined />,
-              key: 'banners'
+              key: 'banners',
             },
             {
               label: 'Other Banners',
@@ -241,7 +241,7 @@ function Navbar({children}:{ children: React.ReactNode}){
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-        <Sider theme='light' collapsed={collapsed} trigger={null} width={350} className="p-0">
+        <Sider theme='light' collapsed={collapsed} trigger={null} width={300} className="p-0">
             <Row className="p-2">
             {!collapsed && <Col span={12}> <img src="/logo_sidebar.png" alt="Logo Sidebar"/></Col> }
             <Col span={!collapsed ? 12 : 24} className="flex justify-end items-center">
@@ -265,7 +265,7 @@ function Navbar({children}:{ children: React.ReactNode}){
             </Row>
                 
             <div className="demo-logo-vertical" />
-            <Menu mode="inline" defaultSelectedKeys={[pathname]} style={{border:0}} className="pr-3" theme="light" items={menuNavbar}/>
+            <Menu onClick={onClick}  mode="inline" defaultSelectedKeys={[pathname]} style={{border:0}} className="pr-3" theme="light" items={menuNavbar}/>
             {/* <Menu theme="light" defaultSelectedKeys={[pathname]} mode="inline" items={items} /> */}
         </Sider>
         <Layout className="!bg-white p-3">
@@ -283,6 +283,8 @@ function Navbar({children}:{ children: React.ReactNode}){
                     </div>
                     <div className="w-25 h-25 bg-[#E0E6ED] p-2 rounded-3xl">
                         <img src="/bell.svg"/>
+                        <div className="text-[#00AB55] leading-[0] w-fit h-fit text-3xl relative top-[-1.7rem] right-[-0.8rem]">•</div>
+
                     </div>
                     <div className="w-25 h-25 bg-[#E0E6ED] rounded-3xl">
                         <img src="/user-profile.svg"/>
